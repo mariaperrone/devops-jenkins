@@ -1,20 +1,22 @@
 pipeline {
-    agent {
-        docker {
-            image 'jupyter/scipy-notebook:latest'
-            args '-p 8888:8888'
-        }
-    }
+    agent any
     stages {
         stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/mariaperrone/devops-jenkins.git'
             }
         }
-        stage('Run Jupyter Notebook') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'jupyter notebook --no-browser --ip=0.0.0.0 --allow-root'
+                    sh 'docker build -t mi-jupyterlab .'
+                }
+            }
+        }
+        stage('Run JupyterLab Container') {
+            steps {
+                script {
+                    sh 'docker run -d -p 8888:8888 --name jupyterlab mi-jupyterlab'
                 }
             }
         }
@@ -27,7 +29,12 @@ pipeline {
             echo 'La ejecución falló.'
         }
         always {
+            script {
+                sh 'docker stop jupyterlab || true'
+                sh 'docker rm jupyterlab || true'
+            }
             cleanWs()
         }
     }
 }
+
