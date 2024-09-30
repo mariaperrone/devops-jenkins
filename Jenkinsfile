@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'jupyter/scipy-notebook:latest'
-            args '-p 8888:8888' // Publica el puerto del contenedor
+            args '-p 8888:8888'
         }
     }
     stages {
