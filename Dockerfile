@@ -17,4 +17,5 @@ COPY . /app
 
 EXPOSE 8000
 
-CMD ["jupyter-book", "serve", ".", "--port", "8000", "--host", "0.0.0.0", "--open-browser"]
+CMD ["jupyter-book", "serve", ".", "--port", "8000", "--host", "0.0.0.0"]
+
